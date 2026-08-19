@@ -40,76 +40,69 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate form fields
-    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+
+    if (loading) return;
+
+    const name = form.name.trim();
+    const email = form.email.trim();
+    const message = form.message.trim();
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!name || !email || !message || !isValidEmail) {
       play("notification");
       setToast({
         open: true,
-        message: "Please fill in all fields before submitting.",
+        message: !isValidEmail && email
+          ? "Please enter a valid email address."
+          : "Please fill in all fields before submitting.",
         type: "error",
       });
       return;
     }
     setLoading(true);
 
-    // Check if EmailJS environment variables are configured
-    const serviceId = import.meta.env.VITE_APP_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY;
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
     if (!serviceId || !templateId || !publicKey) {
       setLoading(false);
       play("error");
+      console.error("EmailJS configuration is incomplete.");
       setToast({
         open: true,
-        message:
-          "EmailJS configuration is missing. Please check your environment variables.",
+        message: "Contact form is temporarily unavailable. Please use email directly.",
         type: "error",
       });
       return;
     }
 
-    emailjs
-      .send(
+    try {
+      await emailjs.send(
         serviceId,
         templateId,
-        {
-          user_name: form.name,
-          my_name: "Adarsh Jha",
-          user_email: form.email,
-          my_email: "",
-          user_message: form.message,
-        },
+        { name, email, message },
         publicKey
-      )
-      .then(
-        () => {
-          setLoading(false);
-          play("success");
-          setToast({
-            open: true,
-            message: "Thank you. I will get back to you as soon as possible.",
-            type: "success",
-          });
-          setForm({
-            name: "",
-            email: "",
-            message: "",
-          });
-        },
-        (error) => {
-          setLoading(false);
-          console.error(error);
-          play("error");
-          setToast({
-            open: true,
-            message: "Ahh, something went wrong. Please try again.",
-            type: "error",
-          });
-        }
       );
+      setForm({ name: "", email: "", message: "" });
+      play("success");
+      setToast({
+        open: true,
+        message: "Message sent successfully. Thanks for reaching out.",
+        type: "success",
+      });
+    } catch {
+      play("error");
+      setToast({
+        open: true,
+        message: "Unable to send your message right now. Please try again or contact me directly.",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -188,8 +181,9 @@ const Contact = () => {
               <button
                 ref={submitButtonRef}
                 type="submit"
+                disabled={loading}
                 style={magneticStyle}
-                className="bg-[#07080d] py-3 px-6 sm:px-8 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-primary text-sm sm:text-base hover:bg-[#0a0b12] transition-colors duration-200"
+                className="bg-[#07080d] py-3 px-6 sm:px-8 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-primary text-sm sm:text-base hover:bg-[#0a0b12] transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Sending..." : "Send"}
               </button>

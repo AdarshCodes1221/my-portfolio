@@ -96,10 +96,39 @@ const SkillKeyboard = () => {
   const [keyboardRevealed, setKeyboardRevealed] = useState(false);
   // Whether the section is in view (for triggering animation)
   const [isInView, setIsInView] = useState(false);
+  const [mobileSectionWidth, setMobileSectionWidth] = useState(0);
+
+  useEffect(() => {
+    if (!isMobile) return undefined;
+
+    const updateSectionWidth = () => {
+      setMobileSectionWidth(sectionRef.current?.clientWidth || window.innerWidth);
+    };
+
+    updateSectionWidth();
+    window.addEventListener("resize", updateSectionWidth);
+    return () => window.removeEventListener("resize", updateSectionWidth);
+  }, [isMobile]);
+
+  const getMobileKeyboardScale = () => {
+    const availableWidth = mobileSectionWidth || window.innerWidth;
+    const scale = availableWidth / 1400;
+    return Math.max(0.24, Math.min(0.31, scale));
+  };
 
   // Helper to get the correct transformation state for the current section/device
   const keyboardStates = (section) => {
-    return STATES[section][isMobile ? "mobile" : "desktop"];
+    const deviceState = STATES[section][isMobile ? "mobile" : "desktop"];
+
+    if (isMobile && section === "skills") {
+      const mobileScale = getMobileKeyboardScale();
+      return {
+        ...deviceState,
+        scale: { x: mobileScale, y: mobileScale, z: mobileScale },
+      };
+    }
+
+    return deviceState;
   };
 
   const positionSplineText = (target) => {
@@ -223,6 +252,20 @@ const SkillKeyboard = () => {
     if (!splineApp || keyboardRevealed || !isInView) return;
     revealKeyCaps();
   }, [splineApp, keyboardRevealed, activeSection, isInView]);
+
+  useEffect(() => {
+    if (!isMobile || !splineApp || !keyboardRevealed) return;
+
+    const keyboard = splineApp.findObjectByName("keyboard");
+    if (!keyboard) return;
+
+    const mobileScale = getMobileKeyboardScale();
+    gsap.set(keyboard.scale, {
+      x: mobileScale,
+      y: mobileScale,
+      z: mobileScale,
+    });
+  }, [isMobile, mobileSectionWidth, splineApp, keyboardRevealed]);
 
   // Animate the keyboard and keycaps into view
   const revealKeyCaps = async () => {
@@ -348,9 +391,9 @@ const SkillKeyboard = () => {
       >
         <h2
           style={{
-            fontSize: "4rem",
+            fontSize: isMobile ? "clamp(2.5rem, 12vw, 3.5rem)" : "4rem",
             fontWeight: 700,
-            marginTop: 34,
+            marginTop: isMobile ? 12 : 34,
             textAlign: "center",
             letterSpacing: 2,
             color: "#fff",
@@ -364,7 +407,15 @@ const SkillKeyboard = () => {
         </p>
         {/* Suspense fallback while loading the Spline 3D scene */}
         <div className="flex w-full max-w-6xl flex-col items-center justify-center gap-3 px-3">
-          <div className="min-w-0 flex-1">
+          <div
+            className="min-w-0 w-full flex-none"
+            style={{
+              width: "min(100%, 900px)",
+              height: isMobile ? "52vh" : "58vh",
+              minHeight: isMobile ? 320 : 420,
+              maxHeight: 600,
+            }}
+          >
             {isInView ? (
               <Suspense fallback={<div>Loading 3D Keyboard...</div>}>
                 <Spline
