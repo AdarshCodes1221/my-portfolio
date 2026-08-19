@@ -26,6 +26,139 @@
   color-scheme: dark;
 }
 
+html {
+  background: #050816;
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 320px;
+  overflow-x: hidden;
+  background: #050816;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a,
+input,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #8ec5ff;
+  outline-offset: 3px;
+}
+
+#root {
+  min-height: 100vh;
+  overflow: clip;
+}
+
+#hero {
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.hero-copy {
+  z-index: 10;
+}
+
+.hero-canvas {
+  position: absolute !important;
+  top: 18% !important;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  height: 82% !important;
+  width: 100% !important;
+}
+
+.hero-actions,
+.hero-scroll {
+  z-index: 12;
+}
+
+@media (max-width: 900px) {
+  .hero-copy {
+    top: 108px;
+  }
+
+  .hero-copy .hero-text,
+  .hero-copy p {
+    max-width: min(90vw, 38rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-copy {
+    top: 112px;
+    gap: 0.75rem;
+  }
+
+  .hero-copy > div:first-child {
+    margin-top: 0.35rem;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(2.5rem, 12vw, 3.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+  }
+
+  .hero-copy p {
+    font-size: clamp(1rem, 4.4vw, 1.3rem);
+    line-height: 1.45;
+  }
+
+  .hero-actions {
+    left: 1.5rem;
+    bottom: 7.25rem;
+  }
+
+  .hero-canvas {
+    top: 28% !important;
+    height: 72% !important;
+  }
+
+  .hero-scroll {
+    bottom: 1.5rem;
+  }
+
+  .hero-scroll a > div {
+    height: 3.25rem;
+    width: 1.85rem;
+    border-width: 3px;
+  }
+
+  .hero-scroll a > div > div {
+    height: 0.6rem;
+    width: 0.6rem;
+  }
+
+  .hash-span {
+    margin-top: -4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
 .hash-span {
   margin-top: -100px;
   padding-bottom: 100px;

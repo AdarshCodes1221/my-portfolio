@@ -1,249 +1,102 @@
-// Skill names enum
 export const SkillNames = {
-  JS: "js",
-  TS: "ts",
+  PYTHON: "python",
+  JAVA: "java",
+  C: "c",
+  CPP: "cpp",
+  JAVASCRIPT: "javascript",
+  DART: "dart",
   HTML: "html",
   CSS: "css",
   REACT: "react",
-  VUE: "vue",
+  VITE: "vite",
   NEXTJS: "nextjs",
-  TAILWIND: "tailwind",
   NODEJS: "nodejs",
-  EXPRESS: "express",
-  POSTGRES: "postgres",
+  MYSQL: "mysql",
   MONGODB: "mongodb",
+  SPARK: "spark",
+  HDFS: "hdfs",
+  PANDAS: "pandas",
+  SQL: "sql",
+  AWS: "aws",
+  EC2: "ec2",
+  S3: "s3",
+  IAM: "iam",
+  VPC: "vpc",
+  DOCKER: "docker",
+  KUBERNETES: "kubernetes",
+  TERRAFORM: "terraform",
+  JENKINS: "jenkins",
+  GITHUB_ACTIONS: "github-actions",
+  ANSIBLE: "ansible",
+  KALI_LINUX: "kali-linux",
+  BURP_SUITE: "burp-suite",
+  SONARQUBE: "sonarqube",
   GIT: "git",
   GITHUB: "github",
-  PRETTIER: "prettier",
-  NPM: "npm",
-  FIREBASE: "firebase",
-  WORDPRESS: "wordpress",
-  LINUX: "linux",
-  DOCKER: "docker",
-  NGINX: "nginx",
-  AWS: "aws",
-  VIM: "vim",
-  VERCEL: "vercel",
 };
 
-// Skill type (for reference)
-// id: number, name: string, label: string, shortDescription: string, color: string, icon: string
+export const categoryStyles = {
+  Programming: { accent: "#fbbf24", soft: "rgba(251,191,36,0.12)" },
+  Web: { accent: "#67e8f9", soft: "rgba(103,232,249,0.12)" },
+  Data: { accent: "#a78bfa", soft: "rgba(167,139,250,0.12)" },
+  Database: { accent: "#818cf8", soft: "rgba(129,140,248,0.12)" },
+  Cloud: { accent: "#60a5fa", soft: "rgba(96,165,250,0.12)" },
+  DevOps: { accent: "#34d399", soft: "rgba(52,211,153,0.12)" },
+  Security: { accent: "#fb7185", soft: "rgba(251,113,133,0.12)" },
+  Tools: { accent: "#2dd4bf", soft: "rgba(45,212,191,0.12)" },
+};
+
+const iconUrl = (icon) => `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${icon}`;
+
+const skill = (id, name, label, category, level, description, icon, accent) => ({
+  id,
+  name,
+  label,
+  category,
+  level,
+  description,
+  shortDescription: description,
+  accent: accent || categoryStyles[category].accent,
+  color: accent || categoryStyles[category].accent,
+  icon: iconUrl(icon),
+});
 
 export const SKILLS = {
-  js: {
-    id: 1,
-    name: "js",
-    label: "JavaScript",
-    shortDescription:
-      "A scripting language used to make web pages interactive and dynamic.",
-    color: "#f0db4f",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
-  },
-  ts: {
-    id: 2,
-    name: "ts",
-    label: "TypeScript",
-    shortDescription:
-      "A superset of JavaScript that adds static typing and better tooling support.",
-    color: "#007acc",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
-  },
-  html: {
-    id: 3,
-    name: "html",
-    label: "HTML",
-    shortDescription:
-      "The standard markup language used to structure content on the web.",
-    color: "#e34c26",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
-  },
-  css: {
-    id: 4,
-    name: "css",
-    label: "CSS",
-    shortDescription:
-      "A style sheet language used to describe the visual presentation of HTML elements.",
-    color: "#563d7c",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
-  },
-  react: {
-    id: 5,
-    name: "react",
-    label: "React",
-    shortDescription:
-      "A JavaScript library for building fast and reusable user interfaces using components.",
-    color: "#61dafb",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-  },
-  vue: {
-    id: 6,
-    name: "vue",
-    label: "Vue",
-    shortDescription:
-      "A progressive JavaScript framework for building user interfaces with a simple and flexible API.",
-    color: "#41b883",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg",
-  },
-  nextjs: {
-    id: 7,
-    name: "nextjs",
-    label: "Next.js",
-    shortDescription:
-      "A React-based framework for building full-stack web apps with server-side rendering and routing.",
-    color: "#fff",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
-  },
-  tailwind: {
-    id: 8,
-    name: "tailwind",
-    label: "Tailwind",
-    shortDescription:
-      "A utility-first CSS framework for rapidly building custom and responsive UI designs.",
-    color: "#38bdf8",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg",
-  },
-  nodejs: {
-    id: 9,
-    name: "nodejs",
-    label: "Node.js",
-    shortDescription:
-      "A runtime environment that lets you run JavaScript on the server side.",
-    color: "#6cc24a",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
-  },
-  express: {
-    id: 10,
-    name: "express",
-    label: "Express",
-    shortDescription:
-      "A minimal and flexible Node.js web application framework for creating APIs and backend services.",
-    color: "#fff",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
-  },
-  postgres: {
-    id: 11,
-    name: "postgres",
-    label: "PostgreSQL",
-    shortDescription:
-      "A powerful open-source relational database system known for reliability and feature-richness.",
-    color: "#336791",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
-  },
-  mongodb: {
-    id: 12,
-    name: "mongodb",
-    label: "MongoDB",
-    shortDescription:
-      "A NoSQL database that stores data in flexible, JSON-like documents.",
-    color: "#336791",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
-  },
-  git: {
-    id: 13,
-    name: "git",
-    label: "Git",
-    shortDescription:
-      "A distributed version control system to track changes in source code during development.",
-    color: "#f1502f",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
-  },
-  github: {
-    id: 14,
-    name: "github",
-    label: "GitHub",
-    shortDescription:
-      "A platform to host, manage, and collaborate on code using Git.",
-    color: "#000000",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
-  },
-  prettier: {
-    id: 15,
-    name: "prettier",
-    label: "Prettier",
-    shortDescription:
-      "A code formatter that automatically styles code to follow consistent rules.",
-    color: "#f7b93a",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prettier/prettier-original.svg",
-  },
-  npm: {
-    id: 16,
-    name: "npm",
-    label: "NPM",
-    shortDescription:
-      "The package manager for JavaScript, used to install libraries and manage project dependencies.",
-    color: "#fff",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg",
-  },
-  firebase: {
-    id: 17,
-    name: "firebase",
-    label: "Firebase",
-    shortDescription:
-      "A platform by Google offering backend services like authentication, database, and hosting.",
-    color: "#ffca28",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
-  },
-  wordpress: {
-    id: 18,
-    name: "wordpress",
-    label: "WordPress",
-    shortDescription:
-      "A content management system (CMS) used to build and manage websites easily.",
-    color: "#007acc",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg",
-  },
-  linux: {
-    id: 19,
-    name: "linux",
-    label: "Linux",
-    shortDescription:
-      "An open-source operating system widely used in servers, development, and cloud environments.",
-    color: "#fff",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
-  },
-  docker: {
-    id: 20,
-    name: "docker",
-    label: "Docker",
-    shortDescription:
-      "A platform for developing, shipping, and running applications in isolated containers.",
-    color: "#2496ed",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
-  },
-  nginx: {
-    id: 21,
-    name: "nginx",
-    label: "NginX",
-    shortDescription:
-      "A high-performance web server and reverse proxy used for serving static content and load balancing.",
-    color: "#008000",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg",
-  },
-  aws: {
-    id: 22,
-    name: "aws",
-    label: "AWS",
-    shortDescription:
-      "Amazon Web Services — a cloud platform offering scalable computing, storage, and services.",
-    color: "#ff9900",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/aws/aws-original.svg",
-  },
-  vim: {
-    id: 23,
-    name: "vim",
-    label: "Vim",
-    shortDescription:
-      "A highly configurable, efficient text editor popular among developers and system administrators.",
-    color: "#e34c26",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vim/vim-original.svg",
-  },
-  vercel: {
-    id: 24,
-    name: "vercel",
-    label: "Vercel",
-    shortDescription:
-      "A cloud platform for deploying frontend applications, especially optimized for Next.js.",
-    color: "#6cc24a",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg",
-  },
+  python: skill(1, "python", "Python", "Programming", "Strong", "Used for scripting, automation, data analysis and AI/ML-oriented projects.", "python/python-original.svg"),
+  java: skill(2, "java", "Java", "Programming", "Intermediate", "Used for object-oriented application development, including a desktop payroll system.", "java/java-original.svg"),
+  c: skill(3, "c", "C", "Programming", "Intermediate", "Systems programming foundation for structured problem solving and computational thinking.", "c/c-original.svg"),
+  cpp: skill(4, "cpp", "C++", "Programming", "Intermediate", "Used for performance-oriented programming and algorithmic problem solving.", "cplusplus/cplusplus-original.svg"),
+  javascript: skill(5, "javascript", "JavaScript", "Programming", "Strong", "Builds interactive web interfaces and supports full-stack application development.", "javascript/javascript-original.svg"),
+  dart: skill(6, "dart", "Dart", "Programming", "Intermediate", "Used with Flutter for mobile application development.", "dart/dart-original.svg"),
+  html: skill(7, "html", "HTML5", "Web", "Strong", "Structures accessible, semantic web experiences.", "html5/html5-original.svg"),
+  css: skill(8, "css", "CSS3", "Web", "Strong", "Creates responsive layouts and expressive interface styling.", "css3/css3-original.svg"),
+  react: skill(9, "react", "React", "Web", "Strong", "Builds component-based user interfaces and interactive web applications.", "react/react-original.svg"),
+  vite: skill(10, "vite", "Vite", "Web", "Strong", "Provides fast development and build tooling for modern web applications.", "vitejs/vitejs-original.svg"),
+  nextjs: skill(11, "nextjs", "Next.js", "Web", "Intermediate", "Supports full-stack React application development and routing.", "nextjs/nextjs-original.svg"),
+  nodejs: skill(12, "nodejs", "Node.js", "Web", "Intermediate", "Runs JavaScript services and APIs on the server.", "nodejs/nodejs-original.svg"),
+  mysql: skill(13, "mysql", "MySQL", "Database", "Strong", "Relational database used for structured application and analytics workloads.", "mysql/mysql-original.svg"),
+  mongodb: skill(14, "mongodb", "MongoDB", "Database", "Intermediate", "Document-oriented database used for flexible application data storage.", "mongodb/mongodb-original.svg"),
+  spark: skill(15, "spark", "Apache Spark", "Data", "Intermediate", "Supports distributed processing and large-scale log and data analysis.", "apachespark/apachespark-original.svg"),
+  hdfs: skill(16, "hdfs", "HDFS", "Data", "Beginner", "Distributed storage layer used for large-scale Hadoop data processing.", "hadoop/hadoop-original.svg"),
+  pandas: skill(17, "pandas", "Pandas", "Data", "Strong", "Supports Python-based data manipulation, cleaning and analysis.", "pandas/pandas-original.svg"),
+  sql: skill(18, "sql", "SQL", "Database", "Strong", "Queries and analyzes structured relational data for applications and reporting.", "mysql/mysql-original.svg"),
+  aws: skill(19, "aws", "AWS", "Cloud", "Intermediate", "Cloud platform experience covering core infrastructure, storage, identity and compute services.", "amazonwebservices/amazonwebservices-original-wordmark.svg"),
+  ec2: skill(20, "ec2", "Amazon EC2", "Cloud", "Intermediate", "Provides configurable cloud compute capacity for application workloads.", "amazonwebservices/amazonwebservices-original-wordmark.svg"),
+  s3: skill(21, "s3", "Amazon S3", "Cloud", "Intermediate", "Provides durable object storage for application and data workflows.", "amazonwebservices/amazonwebservices-original-wordmark.svg"),
+  iam: skill(22, "iam", "IAM", "Cloud", "Intermediate", "Manages identities, roles and access policies in cloud environments.", "amazonwebservices/amazonwebservices-original-wordmark.svg"),
+  vpc: skill(23, "vpc", "VPC", "Cloud", "Beginner", "Defines isolated virtual networking boundaries for cloud resources.", "amazonwebservices/amazonwebservices-original-wordmark.svg"),
+  docker: skill(24, "docker", "Docker", "DevOps", "Strong", "Containerizes applications and services for reproducible development and deployment.", "docker/docker-original.svg"),
+  kubernetes: skill(25, "kubernetes", "Kubernetes", "DevOps", "Intermediate", "Orchestrates containerized workloads and manages scalable deployments.", "kubernetes/kubernetes-original.svg"),
+  terraform: skill(26, "terraform", "Terraform", "DevOps", "Intermediate", "Defines and provisions cloud infrastructure using infrastructure as code.", "terraform/terraform-original.svg"),
+  jenkins: skill(27, "jenkins", "Jenkins", "DevOps", "Intermediate", "Builds automated CI/CD pipelines for testing and deployment workflows.", "jenkins/jenkins-original.svg"),
+  "github-actions": skill(28, "github-actions", "GitHub Actions", "DevOps", "Intermediate", "Automates CI/CD workflows directly from GitHub repositories.", "githubactions/githubactions-original.svg"),
+  ansible: skill(29, "ansible", "Ansible", "DevOps", "Beginner", "Automates server configuration and repeatable infrastructure tasks.", "ansible/ansible-original.svg"),
+  "kali-linux": skill(30, "kali-linux", "Kali Linux", "Security", "Intermediate", "Security-focused Linux environment used for penetration testing and security tooling.", "kalilinux/kalilinux-original.svg"),
+  "burp-suite": skill(31, "burp-suite", "Burp Suite", "Security", "Intermediate", "Supports web security testing, request inspection and application analysis.", "burpsuite/burpsuite-original.svg"),
+  sonarqube: skill(32, "sonarqube", "SonarQube", "Tools", "Intermediate", "Performs automated code quality and static analysis checks.", "sonarqube/sonarqube-original.svg"),
+  git: skill(33, "git", "Git", "Tools", "Strong", "Tracks source changes and supports collaborative software development workflows.", "git/git-original.svg"),
+  github: skill(34, "github", "GitHub", "Tools", "Strong", "Hosts repositories and supports collaboration, review and delivery workflows.", "github/github-original.svg"),
 };
+
+export const skillList = Object.values(SKILLS);
+export const skillCategories = ["All", "Programming", "Web", "Data", "Database", "Cloud", "DevOps", "Security", "Tools"];

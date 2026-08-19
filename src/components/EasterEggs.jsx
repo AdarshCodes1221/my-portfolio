@@ -46,7 +46,7 @@ const EasterEggs = () => {
           );
         }, 800);
 
-        ["jayant", "Jayant", "JAYANT"].forEach((name) => {
+        ["adarsh", "Adarsh", "ADARSH"].forEach((name) => {
           if (Object.hasOwn(window, name)) return;
           Object.defineProperty(window, name, {
             get() {
@@ -55,7 +55,7 @@ const EasterEggs = () => {
               soundEffects.playMagic();
 
               console.log(
-                "%c✨ UNLOCKED ✨\n\n%cWelcome, Admin. You now have the keys to the kingdom.",
+                "%c✨ UNLOCKED ✨\n\n%cWelcome, Adarsh. You found the hidden control room.",
                 "color: #00BFFF; font-size: 32px; font-weight: bold; text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);",
                 "color: #444; font-size: 16px; font-family: 'Arial', sans-serif;"
               );
@@ -69,7 +69,7 @@ const EasterEggs = () => {
                   "background-color: #FFFBEA; color: #D97706; border-left: 5px solid #FBBF24; padding: 15px 15px 10px 15px; font-size: 16px; font-weight: bold; font-family: 'Arial', sans-serif; border-top-left-radius: 5px; border-top-right-radius: 5px;"
                 );
                 console.log(
-                  "%c⚠️ You're not just editing a website anymore. You're editing my Portfolio.",
+                  "%c⚠️ You're not just editing a website anymore. You're editing this portfolio.",
                   "background-color: #FFFBEA; color: #D97706; border-left: 5px solid #FBBF24; padding: 10px 15px 15px 15px; font-size: 16px; font-weight: bold; font-family: 'Arial', sans-serif; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;"
                 );
               }, 2500);

@@ -76,15 +76,19 @@ const ProjectCard = ({ index, name, image, source_code_link, onOpenModal }) => {
 
         {/* Main Image Section - Full Height */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
-          <motion.img
-            src={image}
-            alt={name}
-            className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.02]"
-            style={{
-              filter: "brightness(0.88) saturate(1.05) contrast(1.02)",
-              ...parallaxStyle,
-            }}
-          />
+          {image ? (
+            <motion.img
+              src={image}
+              alt={name}
+              className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.02]"
+              style={{
+                filter: "brightness(0.88) saturate(1.05) contrast(1.02)",
+                ...parallaxStyle,
+              }}
+            />
+          ) : (
+            <div className="w-full h-full bg-[radial-gradient(circle_at_20%_20%,rgba(142,197,255,0.35),transparent_35%),linear-gradient(135deg,#111b30,#07080d_65%,#263653)]" aria-label={`${name} project visual`} />
+          )}
 
           {/* Elegant Overlay */}
           <div className="absolute inset-0 bg-black/25 group-hover:bg-black/15 transition-all duration-500"></div>
@@ -184,7 +188,7 @@ const Works = () => {
             className="mt-3 text-secondary text-[30px] max-w-3xl leading-[50px]"
           >
             <h1>
-              Shaping
+              Exploring
               <span className="slide pl-3">
                 <span className="wrapper">
                   {words.map((word, index) => (
@@ -211,7 +215,7 @@ const Works = () => {
                 </span>
               </span>
             </h1>
-            <h1>into Real Projects that Deliver Results</h1>
+            <h1>ideas through practical software projects</h1>
           </motion.span>
         </div>
 

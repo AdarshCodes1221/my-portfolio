@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const defaultOptions = {
   threshold: 0.45,
@@ -51,16 +51,11 @@ const useNavPeek = (links = [], options = defaultOptions) => {
   }, [links, threshold]);
 
   const focusedIndex = hoverIndex ?? activeIndex;
-  const preview = useMemo(
-    () => links[focusedIndex]?.img,
-    [focusedIndex, links]
-  );
 
   return {
     hoverIndex,
     activeIndex,
     isHovering,
-    preview,
     focusedIndex,
     handleEnter: (idx) => {
       setHoverIndex(idx);

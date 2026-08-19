@@ -2,16 +2,26 @@
 // This component renders an interactive 3D skill keyboard using Spline and GSAP animations.
 // Each key represents a skill, and the keyboard animates in response to user actions.
 
-import { Application } from "@splinetool/runtime";
 import gsap from "gsap";
+import { motion } from "framer-motion";
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { SKILLS, SkillNames } from "../constants/skills";
+import { SKILLS, skillList } from "../constants/skills";
 import { sleep } from "../utils/sleep";
 import useMediaQuery from "../utils/useMediaQuery";
 import soundEffects from "../utils/soundEffects";
 
 // Lazy-load the Spline React component for 3D rendering
 const Spline = React.lazy(() => import("@splinetool/react-spline"));
+
+const SKILL_GROUPS = [
+  { label: "Programming", categories: ["Programming"] },
+  { label: "Web", categories: ["Web"] },
+  { label: "Data / Database", categories: ["Data", "Database"] },
+  { label: "Cloud", categories: ["Cloud"] },
+  { label: "DevOps", categories: ["DevOps"] },
+  { label: "Security", categories: ["Security"] },
+  { label: "Tools", categories: ["Tools"] },
+];
 
 // Keyboard transformation states for different sections and device types
 const STATES = {
@@ -79,6 +89,7 @@ const SkillKeyboard = () => {
   const [splineApp, setSplineApp] = useState();
   // Currently highlighted skill (when a key is hovered or pressed)
   const [selectedSkill, setSelectedSkill] = useState(null);
+  const [showAllSkills, setShowAllSkills] = useState(false);
   // Which section of the site is active (affects keyboard animation)
   const [activeSection, setActiveSection] = useState("skills");
   // Whether the keyboard animation has finished revealing
@@ -90,6 +101,55 @@ const SkillKeyboard = () => {
   const keyboardStates = (section) => {
     return STATES[section][isMobile ? "mobile" : "desktop"];
   };
+
+  const positionSplineText = (target) => {
+    if (!splineApp || !target?.position) return;
+
+    const textObjects = [
+      splineApp.findObjectByName("text-desktop"),
+      splineApp.findObjectByName("text-mobile"),
+    ].filter(Boolean);
+    const horizontalLimit = isMobile ? 105 : 185;
+    const verticalLimit = isMobile ? 70 : 105;
+    const clamp = (value, limit) => Math.max(-limit, Math.min(limit, value));
+    const safeX = clamp(target.position.x, horizontalLimit);
+    const safeY = clamp(target.position.y - (isMobile ? 45 : 70), verticalLimit);
+
+    textObjects.forEach((textObject) => {
+      textObject.position.x = safeX;
+      textObject.position.y = safeY;
+    });
+  };
+
+  const updateSplineSkill = (skill, target) => {
+    if (!splineApp) return;
+    splineApp.setVariable("heading", skill?.label || "");
+    splineApp.setVariable("desc", skill?.shortDescription || "");
+    if (target) positionSplineText(target);
+  };
+
+  const selectSkill = (skill, target) => {
+    setSelectedSkill(skill);
+    updateSplineSkill(skill, target);
+    soundEffects.playClick();
+  };
+
+  useEffect(() => {
+    if (!showAllSkills) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setShowAllSkills(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showAllSkills]);
 
   // Set up intersection observer to detect when skills section comes into view
   useEffect(() => {
@@ -118,29 +178,18 @@ const SkillKeyboard = () => {
 
   // Handle mouse hover events on the 3D keys
   const handleMouseHover = (e) => {
-    if (!splineApp || selectedSkill?.name === e.target.name) return;
+    if (!splineApp) return;
     // If hovering over the keyboard body/platform, clear selection
     if (e.target.name === "body" || e.target.name === "platform") {
       setSelectedSkill(null);
-      if (splineApp.getVariable("heading") && splineApp.getVariable("desc")) {
-        splineApp.setVariable("heading", "");
-        splineApp.setVariable("desc", "");
-      }
+      if (!selectedSkill) updateSplineSkill(null);
     } else {
-      // Otherwise, set the selected skill based on the key name
-      if (!selectedSkill || selectedSkill.name !== e.target.name) {
-        const skill = SKILLS[e.target.name];
-        setSelectedSkill(skill);
+      const skill = SKILLS[e.target.name];
+      if (skill) {
+        updateSplineSkill(skill, e.target);
       }
     }
   };
-
-  // Update the Spline scene when the selected skill changes
-  useEffect(() => {
-    if (!selectedSkill || !splineApp) return;
-    splineApp.setVariable("heading", selectedSkill.label);
-    splineApp.setVariable("desc", selectedSkill.shortDescription);
-  }, [selectedSkill, splineApp]);
 
   // Show/hide skill labels depending on section and device
   useEffect(() => {
@@ -237,17 +286,13 @@ const SkillKeyboard = () => {
     // Clear skill info on key up
     splineApp.addEventListener("keyUp", (e) => {
       if (!splineApp) return;
-      splineApp.setVariable("heading", "");
-      splineApp.setVariable("desc", "");
+      if (!selectedSkill) updateSplineSkill(null);
     });
     // Show skill info on key down
     splineApp.addEventListener("keyDown", (e) => {
       if (!splineApp) return;
       const skill = SKILLS[e.target.name];
-      if (skill) setSelectedSkill(skill);
-      splineApp.setVariable("heading", skill?.label || "");
-      splineApp.setVariable("desc", skill?.shortDescription || "");
-      soundEffects.playClick();
+      if (skill) selectSkill(skill, e.target);
     });
     // Handle mouse hover on keys
     splineApp.addEventListener("mouseHover", handleMouseHover);
@@ -272,6 +317,13 @@ const SkillKeyboard = () => {
     <section
       ref={sectionRef}
       id="skills"
+      className="relative"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) {
+          setSelectedSkill(null);
+          updateSplineSkill(null);
+        }
+      }}
       style={{
         width: "100%",
         height: "100vh",
@@ -311,14 +363,89 @@ const SkillKeyboard = () => {
           (hint: press a key)
         </p>
         {/* Suspense fallback while loading the Spline 3D scene */}
-        <Suspense fallback={<div>Loading 3D Keyboard...</div>}>
-          <Spline
-            ref={splineContainer}
-            onLoad={(app) => setSplineApp(app)}
-            scene="/assets/skills-keyboard.spline"
-          />
-        </Suspense>
+        <div className="flex w-full max-w-6xl flex-col items-center justify-center gap-3 px-3">
+          <div className="min-w-0 flex-1">
+            {isInView ? (
+              <Suspense fallback={<div>Loading 3D Keyboard...</div>}>
+                <Spline
+                  ref={splineContainer}
+                  onLoad={(app) => setSplineApp(app)}
+                  scene="/assets/skills-keyboard.spline"
+                />
+              </Suspense>
+            ) : (
+              <div className="h-[420px] w-full" aria-hidden="true" />
+            )}
+          </div>
+          <motion.button
+            type="button"
+            onClick={() => setShowAllSkills(true)}
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            className="shrink-0 rounded-lg border border-cyan-200/20 bg-[#081321]/85 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-cyan-100/75 shadow-[0_6px_18px_rgba(34,211,238,0.1)] backdrop-blur-md transition hover:border-cyan-200/45 hover:text-white hover:shadow-[0_8px_22px_rgba(34,211,238,0.16)]"
+          >
+            View All Skills
+          </motion.button>
+        </div>
       </div>
+      {showAllSkills ? (
+        <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-label="All skills"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute inset-0 z-40 flex items-center justify-center bg-[#050b14]/80 p-4 backdrop-blur-md"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setShowAllSkills(false);
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 18, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            className="max-h-[86vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-cyan-200/20 bg-[#091321]/95 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.5)] sm:p-7"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Technical toolkit</p>
+                <h3 className="mt-1 text-2xl font-bold text-white">All Skills</h3>
+              </div>
+                <button type="button" onClick={() => setShowAllSkills(false)} aria-label="Close all skills" className="rounded-md p-1 text-2xl leading-none text-white/45 transition hover:text-white">X</button>
+            </div>
+            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {SKILL_GROUPS.map((group) => {
+                const groupSkills = skillList.filter((skill) => group.categories.includes(skill.category));
+                return (
+                  <div key={group.label}>
+                    <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/50">{group.label}</h4>
+                    <div className="space-y-2">
+                      {groupSkills.map((skill) => (
+                        <button
+                          key={skill.name}
+                          type="button"
+                          onMouseEnter={() => updateSplineSkill(skill)}
+                          onFocus={() => updateSplineSkill(skill)}
+                          onClick={() => selectSkill(skill)}
+                          className="group w-full rounded-lg border border-white/10 bg-white/[0.03] p-3 text-left transition hover:-translate-y-0.5 hover:bg-white/[0.07]"
+                          style={{ borderColor: `${skill.accent}35` }}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <span className="font-semibold text-white transition group-hover:text-cyan-100">{skill.label}</span>
+                          </div>
+                          <p className="mt-1 text-[10px] uppercase tracking-[0.12em]" style={{ color: skill.accent }}>{skill.category}</p>
+                          <p className="mt-2 text-xs leading-5 text-white/55">{skill.description}</p>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        </motion.div>
+      ) : null}
       <span id="projects"></span>
     </section>
   );

@@ -1,50 +1,15 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  about,
-  achievements,
-  project,
-  portfolio,
-  skills,
-  testimonials,
-  contact,
-  logo,
-} from "../assets";
+import logo from "../assets/logo.png";
+import SectionPreview from "./SectionPreview";
 import useNavPeek from "../reactbits/hooks/useNavPeek";
 
 const NAV_LINKS = [
-  { title: "home", href: "#hero", img: portfolio },
-  {
-    title: "about",
-    href: "#about",
-    img: about,
-  },
-  {
-    title: "project",
-    href: "#projects",
-    img: project,
-  },
-  {
-    title: "achievements",
-    href: "#achievements",
-    img: achievements,
-  },
-  {
-    title: "skills",
-    href: "#skills",
-    img: skills,
-  },
-  {
-    title: "testimonials",
-    href: "#testimonials",
-    img: testimonials,
-  },
-  {
-    title: "contact",
-    href: "#contact",
-    img: contact,
-  },
+  { title: "about", href: "#about" },
+  { title: "skills", href: "#skills" },
+  { title: "projects", href: "#projects" },
+  { title: "achievements", href: "#achievements" },
+  { title: "contact", href: "#contact" },
 ];
 
 const opacity = {
@@ -100,10 +65,7 @@ const Navbar = () => {
   const [isActive, setIsActive] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const {
-    hoverIndex,
-    activeIndex,
     isHovering,
-    preview,
     focusedIndex,
     handleEnter,
     handleLeave,
@@ -139,9 +101,11 @@ const Navbar = () => {
     >
       <div className="flex items-center justify-between max-w-8xl my-2 mx-4 relative">
         <a href="#hero" className="flex mx-6 items-center justify-center">
-          <span className="text-md">
-            <img src={logo} alt="logo" className="h-16 object-contain" />
-          </span>
+          <img
+            src={logo}
+            alt="Adarsh Jha logo"
+            className="h-16 w-16 object-contain sm:h-20 sm:w-20"
+          />
         </a>
         <button
           onClick={() => setIsActive((v) => !v)}
@@ -286,31 +250,22 @@ const Navbar = () => {
                 <motion.div
                   variants={opacity}
                   initial="initial"
-                  animate={isHovering ? "open" : "closed"}
+                  animate="open"
                   className="hidden md:flex items-center justify-start w-1/3 h-full"
                   style={{ minHeight: 200 }}
                 >
-                  <img
-                    src={preview || NAV_LINKS[activeIndex].img}
-                    alt={
-                      NAV_LINKS[focusedIndex]?.title ||
-                      NAV_LINKS[activeIndex].title
-                    }
-                    className="object-cover rounded-lg shadow-lg border border-white/20"
-                    style={{
-                      width: "480px",
-                      height: "270px",
-                      aspectRatio: "16/9",
-                      maxWidth: "90vw",
-                      maxHeight: "60vh",
-                    }}
-                  />
+                  <SectionPreview sectionIndex={focusedIndex} />
                 </motion.div>
               )}
             </motion.div>
           )}
         </AnimatePresence>
       </motion.div>
+      <div className="pointer-events-none fixed bottom-5 left-6 z-40 hidden gap-4 text-xs uppercase tracking-[0.18em] text-white/45 md:flex">
+        <a className="pointer-events-auto hover:text-white" href="https://github.com/AdarshCodes1221" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a className="pointer-events-auto hover:text-white" href="https://www.linkedin.com/in/adarsh-jha-46a0041bb/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a className="pointer-events-auto hover:text-white" href="http://adarshjha.com.np/" target="_blank" rel="noopener noreferrer">Portfolio</a>
+      </div>
     </motion.header>
   );
 };

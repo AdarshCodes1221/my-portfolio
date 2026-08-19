@@ -227,15 +227,21 @@ const ProjectModal = ({
               key={projectKey}
               className="relative w-full h-[350px] md:h-[450px] overflow-hidden rounded-t-3xl group/carousel bg-[#0d1120]"
             >
-              <motion.img
-                key={`${projectKey}-${safeImageIndex}-${currentImage}`}
-                src={currentImage}
-                alt={`${project.name} ${safeImageIndex + 1}`}
-                initial={{ opacity: 0, scale: 1.04 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.28 }}
-                className="w-full h-full object-contain md:object-cover"
-              />
+              {currentImage ? (
+                <motion.img
+                  key={`${projectKey}-${safeImageIndex}-${currentImage}`}
+                  src={currentImage}
+                  alt={`${project.name} ${safeImageIndex + 1}`}
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.28 }}
+                  className="w-full h-full object-contain md:object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-[radial-gradient(circle_at_20%_20%,rgba(142,197,255,0.35),transparent_35%),linear-gradient(135deg,#111b30,#07080d_65%,#263653)] flex items-center justify-center px-8">
+                  <span className="text-white/70 text-center text-2xl md:text-4xl font-semibold">{project.name}</span>
+                </div>
+              )}
 
               <div className="absolute inset-0 bg-gradient-to-t from-[#1a1f35] via-[#1a1f35]/20 to-transparent opacity-90 pointer-events-none"></div>
 
@@ -315,8 +321,7 @@ const ProjectModal = ({
                 {project.name}
               </motion.h2>
 
-              {/* Metrics Row - Always Show */}
-              <motion.div
+              {project.metrics && <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
@@ -373,7 +378,7 @@ const ProjectModal = ({
                     {project.metrics?.views ?? 0}
                   </span>
                 </div>
-              </motion.div>
+              </motion.div>}
 
               {/* Description */}
               <motion.div

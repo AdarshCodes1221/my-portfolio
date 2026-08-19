@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
+import { OrbitControls, useGLTF } from "@react-three/drei";
 
 import CanvasLoader from "../Loader";
 
@@ -55,11 +55,11 @@ const ComputersCanvas = () => {
 
   return (
     <Canvas
+      className="hero-canvas"
       frameloop='demand'
       shadows
-      dpr={[1, 2]}
+      dpr={[1, 1.25]}
       camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: true }}
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
@@ -69,8 +69,6 @@ const ComputersCanvas = () => {
         />
         <Computers isMobile={isMobile} />
       </Suspense>
-
-      <Preload all />
     </Canvas>
   );
 };
