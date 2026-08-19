@@ -80,9 +80,10 @@ const ProjectCard = ({ index, name, image, source_code_link, onOpenModal }) => {
             <motion.img
               src={image}
               alt={name}
-              className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.02]"
+              className="w-full h-full object-contain transition-all duration-500 ease-out group-hover:scale-[1.02]"
               style={{
                 filter: "brightness(0.88) saturate(1.05) contrast(1.02)",
+                backgroundColor: "rgba(10,14,23,0.9)",
                 ...parallaxStyle,
               }}
             />

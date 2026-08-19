@@ -4,9 +4,13 @@ import { github } from "../assets";
 
 const getProjectImages = (project) => {
   if (!project) return [];
-  if (Array.isArray(project.images) && project.images.length > 0) {
-    return project.images;
-  }
+  const gallery = Array.isArray(project.gallery)
+    ? project.gallery
+    : Array.isArray(project.images)
+      ? project.images
+      : [];
+
+  if (gallery.length > 0) return gallery;
   return project.image ? [project.image] : [];
 };
 
@@ -59,7 +63,6 @@ const ProjectModal = ({
         return;
       }
 
-      // Prevent default scrolling for arrow keys
       if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
         e.preventDefault();
       }
@@ -67,9 +70,9 @@ const ProjectModal = ({
       const imagesCount = images.length || 1;
 
       if (e.key === "ArrowLeft") {
-        navigateToProject(currentIndex - 1);
+        setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : imagesCount - 1));
       } else if (e.key === "ArrowRight") {
-        navigateToProject(currentIndex + 1);
+        setCurrentImageIndex((prev) => (prev < imagesCount - 1 ? prev + 1 : 0));
       } else if (e.key === "ArrowUp") {
         setCurrentImageIndex((prev) =>
           prev > 0 ? prev - 1 : imagesCount - 1
@@ -235,7 +238,7 @@ const ProjectModal = ({
                   initial={{ opacity: 0, scale: 1.04 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.28 }}
-                  className="w-full h-full object-contain md:object-cover"
+                  className="w-full h-full object-contain"
                 />
               ) : (
                 <div className="w-full h-full bg-[radial-gradient(circle_at_20%_20%,rgba(142,197,255,0.35),transparent_35%),linear-gradient(135deg,#111b30,#07080d_65%,#263653)] flex items-center justify-center px-8">

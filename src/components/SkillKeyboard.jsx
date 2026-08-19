@@ -116,6 +116,8 @@ const SkillKeyboard = () => {
     return Math.max(0.24, Math.min(0.31, scale));
   };
 
+  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
   // Helper to get the correct transformation state for the current section/device
   const keyboardStates = (section) => {
     const deviceState = STATES[section][isMobile ? "mobile" : "desktop"];
@@ -138,15 +140,28 @@ const SkillKeyboard = () => {
       splineApp.findObjectByName("text-desktop"),
       splineApp.findObjectByName("text-mobile"),
     ].filter(Boolean);
-    const horizontalLimit = isMobile ? 105 : 185;
-    const verticalLimit = isMobile ? 70 : 105;
-    const clamp = (value, limit) => Math.max(-limit, Math.min(limit, value));
-    const safeX = clamp(target.position.x, horizontalLimit);
-    const safeY = clamp(target.position.y - (isMobile ? 45 : 70), verticalLimit);
+
+    if (textObjects.length === 0) return;
+
+    const horizontalLimit = isMobile ? 90 : 170;
+    const verticalLimit = isMobile ? 55 : 100;
+    const baseX = target.position.x ?? 0;
+    const baseY = (target.position.y ?? 0) - (isMobile ? 42 : 68);
+
+    let safeX = baseX;
+    let safeY = baseY;
+
+    if (baseX < -60) safeX += isMobile ? 48 : 72;
+    if (baseX > 80) safeX -= isMobile ? 48 : 72;
+    if (baseY > 40) safeY -= isMobile ? 24 : 42;
+    if (baseY < -38) safeY += isMobile ? 24 : 42;
+
+    const finalX = clamp(safeX, -horizontalLimit, horizontalLimit);
+    const finalY = clamp(safeY, -verticalLimit, verticalLimit);
 
     textObjects.forEach((textObject) => {
-      textObject.position.x = safeX;
-      textObject.position.y = safeY;
+      textObject.position.x = finalX;
+      textObject.position.y = finalY;
     });
   };
 
@@ -243,10 +258,18 @@ const SkillKeyboard = () => {
 
   // Set up Spline event listeners and GSAP animations when the scene loads
   useEffect(() => {
+    if (!splineApp) return undefined;
+
     handleSplineInteractions();
     handleGsapAnimations();
-  }, [splineApp]);
 
+    return () => {
+      if (!splineApp || typeof splineApp.removeEventListener !== "function") return;
+      splineApp.removeEventListener("keyUp", () => {});
+      splineApp.removeEventListener("keyDown", () => {});
+      splineApp.removeEventListener("mouseHover", () => {});
+    };
+  }, [splineApp]);
   // Trigger the keyboard reveal animation when the scene is ready AND section is in view
   useEffect(() => {
     if (!splineApp || keyboardRevealed || !isInView) return;
@@ -326,19 +349,22 @@ const SkillKeyboard = () => {
   // Set up Spline event listeners for key presses and hovers
   const handleSplineInteractions = () => {
     if (!splineApp) return;
-    // Clear skill info on key up
-    splineApp.addEventListener("keyUp", (e) => {
-      if (!splineApp) return;
+
+    const onKeyUp = () => {
       if (!selectedSkill) updateSplineSkill(null);
-    });
-    // Show skill info on key down
-    splineApp.addEventListener("keyDown", (e) => {
-      if (!splineApp) return;
+    };
+
+    const onKeyDown = (e) => {
       const skill = SKILLS[e.target.name];
       if (skill) selectSkill(skill, e.target);
-    });
-    // Handle mouse hover on keys
+    };
+
+    splineApp.addEventListener("keyUp", onKeyUp);
+    splineApp.addEventListener("keyDown", onKeyDown);
     splineApp.addEventListener("mouseHover", handleMouseHover);
+
+    // Keep the listener references on the Spline instance so the handlers remain stable.
+    splineApp.__skillHandlers = { onKeyUp, onKeyDown };
   };
 
   // Set up initial GSAP animations for the keyboard

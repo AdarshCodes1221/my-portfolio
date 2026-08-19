@@ -1,4 +1,28 @@
-import { code, concepts, designs, ideas } from "../assets";
+import {
+  code,
+  concepts,
+  designs,
+  ideas,
+  parallelAI01,
+  parallelAI02,
+  githubRepoInspector01,
+  githubRepoInspector02,
+  githubRepoInspector03,
+  financialFraudDetection01,
+  financialFraudDetection02,
+  financialFraudDetection03,
+  gharApanaSa01,
+  ecommerceDataAnalytics01,
+  qceraNepalSite01,
+  qceraNepalSite02,
+  qceraNepalSite03,
+  payrollManagementSystem01,
+  payrollManagementSystem02,
+  payrollManagementSystem03,
+  payrollManagementSystem04,
+  payrollManagementSystem05,
+  payrollManagementSystem06,
+} from "../assets";
 
 const achievements = [
   {
@@ -284,9 +308,34 @@ const achievements = [
   points: achievement.skills,
 }));
 
+const parallelAIImages = [parallelAI01, parallelAI02];
+const githubRepoInspectorImages = [
+  githubRepoInspector01,
+  githubRepoInspector02,
+  githubRepoInspector03,
+];
+const financialFraudDetectionImages = [
+  financialFraudDetection01,
+  financialFraudDetection02,
+  financialFraudDetection03,
+];
+const gharApanaSaImages = [gharApanaSa01];
+const ecommerceDataAnalyticsImages = [ecommerceDataAnalytics01];
+const qceraNepalSiteImages = [qceraNepalSite01, qceraNepalSite02, qceraNepalSite03];
+const payrollManagementSystemImages = [
+  payrollManagementSystem01,
+  payrollManagementSystem02,
+  payrollManagementSystem03,
+  payrollManagementSystem04,
+  payrollManagementSystem05,
+  payrollManagementSystem06,
+];
+
 const projects = [
   {
     name: "ParallelAI",
+    image: parallelAIImages[0],
+    gallery: parallelAIImages,
     description:
       "Autonomous multimodal agent platform handling PDFs, images, audio and text with RAG, planning, state-machine orchestration, tool execution and SSE streaming.",
     tags: ["Python", "FastAPI", "React/Vite", "RAG", "NumPy", "Docker", "AI/LLM"].map((name) => ({ name, color: "blue-text-gradient" })),
@@ -294,6 +343,8 @@ const projects = [
   },
   {
     name: "GitHub Repo Inspector",
+    image: githubRepoInspectorImages[0],
+    gallery: githubRepoInspectorImages,
     description:
       "GitHub-integrated developer tool that analyzes repository health, documentation, licensing, activity and technology stacks.",
     tags: ["React/Vite", "Node.js", "Express.js", "GitHub REST API", "GitHub OAuth", "Recharts"].map((name) => ({ name, color: "green-text-gradient" })),
@@ -301,6 +352,8 @@ const projects = [
   },
   {
     name: "Financial Fraud Detection",
+    image: financialFraudDetectionImages[0],
+    gallery: financialFraudDetectionImages,
     description:
       "Financial fraud detection and risk ranking combining AHP, TOPSIS and ELECTRE with AI/ML-based fraud prediction.",
     tags: ["Python", "NumPy", "Pandas", "Scikit-learn", "AI/ML", "AHP", "TOPSIS", "ELECTRE", "MCDM"].map((name) => ({ name, color: "pink-text-gradient" })),
@@ -308,6 +361,8 @@ const projects = [
   },
   {
     name: "Ghar-Apana-Sa",
+    image: gharApanaSaImages[0],
+    gallery: gharApanaSaImages,
     description:
       "Responsive React/Vite real-estate application with property discovery UI, animated counters, carousel content and a DevSecOps delivery workflow.",
     tags: ["React", "Vite", "JavaScript", "Docker", "Jenkins", "SonarQube", "DevSecOps"].map((name) => ({ name, color: "violet-text-gradient" })),
@@ -315,6 +370,8 @@ const projects = [
   },
   {
     name: "E-commerce Data Analytics",
+    image: ecommerceDataAnalyticsImages[0],
+    gallery: ecommerceDataAnalyticsImages,
     description:
       "E-commerce sales analysis using Python/Pandas, MySQL and Tableau to study revenue, customers, products and geographic performance.",
     tags: ["Python", "Pandas", "MySQL", "SQL", "Tableau"].map((name) => ({ name, color: "orange-text-gradient" })),
@@ -323,6 +380,8 @@ const projects = [
   },
   {
     name: "QCERA Nepal Site",
+    image: qceraNepalSiteImages[0],
+    gallery: qceraNepalSiteImages,
     description: "Production-oriented responsive client website for a showroom in Kathmandu, focused on products, services and business presentation.",
     tags: ["React/TypeScript", "Modern web technologies"].map((name) => ({ name, color: "blue-text-gradient" })),
     source_code_link: "https://github.com/AdarshCodes1221/qcera-nepal-site",
@@ -330,15 +389,11 @@ const projects = [
   },
   {
     name: "Payroll Management System",
+    image: payrollManagementSystemImages[0],
+    gallery: payrollManagementSystemImages,
     description: "Java desktop payroll application using Swing, MySQL and JDBC for employee records, salary calculation and payroll reporting.",
     tags: ["Java", "Swing", "MySQL", "JDBC"].map((name) => ({ name, color: "green-text-gradient" })),
     source_code_link: "https://github.com/AdarshCodes1221/Payroll-Management-system",
-  },
-  {
-    name: "Soul Chaser App",
-    description: "Flutter mobile application focused on daily devotional and spiritual features.",
-    tags: ["Flutter", "Dart", "Mobile"].map((name) => ({ name, color: "pink-text-gradient" })),
-    source_code_link: "https://github.com/AdarshCodes1221/Soul-Chaser-App",
   },
 ];
 

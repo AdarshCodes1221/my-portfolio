@@ -7,11 +7,14 @@ import useMediaQuery from "../utils/useMediaQuery";
 import { ComputersCanvas } from "./canvas";
 
 const Hero = () => {
+  const cvPath = "/cv/Adarsh-Jha-CV.pdf";
   const [typedText, setTypedText] = useState("");
   const typedItems = ["Software Engineering", "Cloud", "Data/AI", "Cybersecurity"];
   const [itemIndex, setItemIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
+  const [cvAvailable, setCvAvailable] = useState(false);
+  const [showDownloadEffect, setShowDownloadEffect] = useState(false);
 
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { style: parallaxStyle } = useParallax({
@@ -19,6 +22,22 @@ const Hero = () => {
     maxOffset: 15,
     enabled: !isMobile,
   });
+
+  useEffect(() => {
+    let mounted = true;
+
+    fetch(cvPath, { method: "HEAD" })
+      .then((response) => {
+        if (mounted) setCvAvailable(response.ok);
+      })
+      .catch(() => {
+        if (mounted) setCvAvailable(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const typeItem = () => {
@@ -40,6 +59,12 @@ const Hero = () => {
 
     return () => clearInterval(typingInterval);
   }, [charIndex, itemIndex]);
+
+  const handleCvDownload = () => {
+    setShowDownloadEffect(true);
+    window.setTimeout(() => setShowDownloadEffect(false), 950);
+  };
+
   return (
     <section className={`relative w-full h-screen mx-auto`} id="hero">
       <div
@@ -85,9 +110,89 @@ const Hero = () => {
       <ComputersCanvas />
 
       <div className="hero-actions absolute left-6 bottom-28 z-10 max-w-[calc(100%-3rem)]">
-        <button type="button" disabled title="CV file is not available in this repository yet" className="rounded-lg border border-white/10 bg-white/[0.04] px-5 py-3 font-semibold text-white/45 shadow-lg cursor-not-allowed">
-          Download CV
-        </button>
+        <style>{`
+          .cv-download-effect {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 5rem;
+            height: 5rem;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+          }
+          .cv-download-effect__document {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 1.25rem;
+            height: 1.5rem;
+            border: 1px solid rgba(210, 231, 255, 0.9);
+            border-radius: 2px;
+            background: rgba(83, 119, 157, 0.65);
+            box-shadow: 0 0 10px rgba(142, 197, 255, 0.3);
+            transform: translate(-50%, -50%);
+            animation: cv-document-lift 950ms ease-out forwards;
+          }
+          .cv-download-effect__heart {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 0.7rem;
+            height: 0.7rem;
+            border: 1px solid rgba(142, 197, 255, 0.8);
+            transform: translate(-50%, -50%) rotate(45deg) scale(0);
+            opacity: 0;
+            animation: cv-heart-burst 950ms 160ms ease-out forwards;
+          }
+          .cv-download-effect__heart::before,
+          .cv-download-effect__heart::after {
+            content: "";
+            position: absolute;
+            width: 0.7rem;
+            height: 0.7rem;
+            border: 1px solid rgba(142, 197, 255, 0.8);
+            border-radius: 50%;
+          }
+          .cv-download-effect__heart::before { left: -1px; top: -0.4rem; }
+          .cv-download-effect__heart::after { left: -0.4rem; top: -1px; }
+          @keyframes cv-document-lift {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            55% { opacity: 1; transform: translate(-50%, -85%) scale(0.8); }
+            100% { opacity: 0; transform: translate(-50%, -105%) scale(0.35); }
+          }
+          @keyframes cv-heart-burst {
+            0% { opacity: 0; transform: translate(-50%, -50%) rotate(45deg) scale(0); }
+            35% { opacity: 0.9; transform: translate(-50%, -50%) rotate(45deg) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) rotate(45deg) scale(2.7); }
+          }
+        `}</style>
+        {cvAvailable ? (
+          <a
+            href={cvPath}
+            download="Adarsh-Jha-CV.pdf"
+            aria-label="Download Adarsh Jha CV"
+            onClick={handleCvDownload}
+            className="rounded-lg border border-white/10 bg-white/[0.04] px-5 py-3 font-semibold text-white shadow-lg"
+          >
+            Download CV
+          </a>
+        ) : (
+          <button
+            type="button"
+            disabled
+            title="CV file is not available in this repository yet"
+            aria-label="Download Adarsh Jha CV unavailable"
+            className="rounded-lg border border-white/10 bg-white/[0.04] px-5 py-3 font-semibold text-white/45 shadow-lg cursor-not-allowed"
+          >
+            Download CV
+          </button>
+        )}
+        {showDownloadEffect && (
+          <span className="cv-download-effect" aria-hidden="true">
+            <span className="cv-download-effect__document" />
+            <span className="cv-download-effect__heart" />
+          </span>
+        )}
       </div>
 
       <div className="hero-scroll absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center">
